@@ -13158,17 +13158,176 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## data dowload code snippets here</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># libraries</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">requests.auth</span> <span class="kn">import</span> <span class="n">HTTPBasicAuth</span>
+</pre></div>
 
-<span class="c1">## common var - foder location </span>
+    </div>
+</div>
+</div>
 
-<span class="c1">## region of interest - calakmul</span>
-<span class="c1">## cloud filter - &lt;50% </span>
-<span class="c1">## datetime filter - 2017 wet and dry seasons</span>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># variable definition</span>
+<span class="c1"># output folder name</span>
+<span class="c1"># wet months</span>
+<span class="c1"># scene_folder_name = &#39;201701&#39;</span>
+<span class="c1"># scene_folder_name = &#39;201702&#39;</span>
 
-<span class="c1">## activation </span>
+<span class="c1"># dry months</span>
+<span class="n">scene_folder_name</span> <span class="o">=</span> <span class="s1">&#39;201709&#39;</span>
+<span class="c1"># scene_folder_name = &#39;201708&#39;</span>
+<span class="c1"># scene_folder_name = &#39;201707&#39;</span>
 
-<span class="c1">## download </span>
+<span class="c1"># set up session</span>
+<span class="n">item_type</span> <span class="o">=</span> <span class="s2">&quot;PSScene&quot;</span>
+<span class="n">item_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PSScene&quot;</span><span class="p">]</span>
+<span class="n">URL</span> <span class="o">=</span> <span class="s2">&quot;https://api.planet.com/data/v1&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PL_API_KEY&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;xxxx&#39;</span> <span class="c1"># enter api key here</span>
+<span class="n">PLANET_API_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s1">&#39;PL_API_KEY&#39;</span><span class="p">)</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">session</span><span class="o">.</span><span class="n">auth</span> <span class="o">=</span> <span class="p">(</span><span class="n">PLANET_API_KEY</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span>
+<span class="n">quick_url</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/quick-search&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">URL</span><span class="p">)</span> <span class="c1"># setup the quick search endpoint url</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;downloading scenes for: &quot;</span> <span class="o">+</span> <span class="n">scene_folder_name</span><span class="p">)</span>
+
+<span class="c1"># setup folder structure</span>
+<span class="c1"># data_folder = r&#39;data/scenes/&#39; + scene_folder_name</span>
+<span class="n">data_folder</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;D:/Users/jpatel27/ponds_wlp/data/scenes/&#39;</span> <span class="o">+</span> <span class="n">scene_folder_name</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">data_folder</span><span class="p">):</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">data_folder</span><span class="p">)</span>  <span class="c1"># create folder if it does not exist</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># data download for ortho_analytic_4b_sr</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;D:/Users/jpatel27/ponds_wlp/data/calakmul.geojson&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">j</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">data_folder</span><span class="p">)</span>
+
+    <span class="c1"># Read AOI as geojson</span>
+    <span class="n">geojson_geometry</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="c1"># ---------------------------filters---------------------------#</span>
+    <span class="c1"># get images that overlap with our AOI</span>
+    <span class="n">geometry_filter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;GeometryFilter&quot;</span><span class="p">,</span><span class="s2">&quot;field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;geometry&quot;</span><span class="p">,</span><span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="n">geojson_geometry</span><span class="p">}</span>
+
+    <span class="n">date_range_filter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;DateRangeFilter&quot;</span><span class="p">,</span><span class="s2">&quot;field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;acquired&quot;</span><span class="p">,</span><span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;gte&quot;</span><span class="p">:</span> <span class="s2">&quot;2017-09-01T00:00:00.000Z&quot;</span><span class="p">,</span><span class="s2">&quot;lte&quot;</span><span class="p">:</span> <span class="s2">&quot;2017-09-30T00:00:00.000Z&quot;</span><span class="p">}}</span>
+    
+    <span class="c1"># only get images which have &lt;50% cloud coverage</span>
+    <span class="n">cloud_cover_filter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;RangeFilter&quot;</span><span class="p">,</span><span class="s2">&quot;field_name&quot;</span><span class="p">:</span> <span class="s2">&quot;cloud_cover&quot;</span><span class="p">,</span><span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;lte&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}}</span>
+    
+    <span class="c1"># combine our geo, date, cloud filters</span>
+    <span class="n">combined_filter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;AndFilter&quot;</span><span class="p">,</span><span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">geometry_filter</span><span class="p">,</span> <span class="n">date_range_filter</span><span class="p">,</span> <span class="n">cloud_cover_filter</span><span class="p">]}</span>
+
+    <span class="c1"># setup the request</span>
+    <span class="n">request</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;item_types&quot;</span><span class="p">:</span> <span class="n">item_types</span><span class="p">,</span><span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="n">combined_filter</span><span class="p">}</span>
+    
+    <span class="c1"># ---------------------------download ---------------------------#</span>
+
+    <span class="c1"># Send the POST request to the API quick search endpoint</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">quick_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+    <span class="c1"># Assign the response to a variable</span>
+    <span class="n">geojson</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="c1"># extract image IDs only</span>
+    <span class="n">image_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">geojson</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">image_ids</span><span class="p">)</span>
+
+    <span class="c1"># all available assets for image id</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image_ids</span><span class="p">)):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;current scene:&quot;</span> <span class="p">,</span> <span class="n">image_ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">id0</span> <span class="o">=</span> <span class="n">image_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">id0_url</span> <span class="o">=</span> <span class="s1">&#39;https://api.planet.com/data/v1/item-types/</span><span class="si">{}</span><span class="s1">/items/</span><span class="si">{}</span><span class="s1">/assets&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">item_type</span><span class="p">,</span> <span class="n">id0</span><span class="p">)</span>
+
+        <span class="c1"># Returns JSON metadata for assets in this ID. Learn more: planet.com/docs/reference/data-api/items-assets/#asset</span>
+        <span class="n">result</span> <span class="o">=</span> \
+            <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">id0_url</span><span class="p">,</span>
+                <span class="n">auth</span><span class="o">=</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="n">PLANET_API_KEY</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># List of asset types available for this particular satellite image</span>
+        <span class="n">result_keys</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="c1"># print(result_keys)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;ortho_analytic_4b_sr&quot;</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">():</span>
+            <span class="c1"># check asset status</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s1">&#39;ortho_analytic_4b_sr&#39;</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">]</span>
+
+            <span class="c1"># activate asset</span>
+            <span class="c1"># Parse out useful links</span>
+            <span class="c1"># insert product here</span>
+            <span class="n">links</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="sa">u</span><span class="s2">&quot;ortho_analytic_4b_sr&quot;</span><span class="p">][</span><span class="s2">&quot;_links&quot;</span><span class="p">]</span>
+            <span class="n">self_link</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="s2">&quot;_self&quot;</span><span class="p">]</span>
+            <span class="n">activation_link</span> <span class="o">=</span> <span class="n">links</span><span class="p">[</span><span class="s2">&quot;activate&quot;</span><span class="p">]</span>
+
+            <span class="c1"># Request activation of the &#39;analytic&#39; asset:</span>
+            <span class="n">activate_result</span> <span class="o">=</span> \
+                <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">activation_link</span><span class="p">,</span>
+                    <span class="n">auth</span><span class="o">=</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="n">PLANET_API_KEY</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="c1"># assign inital status to cur_activation_status</span>
+            <span class="n">cur_activation_status</span> <span class="o">=</span> <span class="n">status</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;current status &quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">status</span><span class="p">)</span>
+            <span class="c1"># if status is already active</span>
+            <span class="c1"># comment out if you only need inactive scenes</span>
+            <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="s1">&#39;active&#39;</span><span class="p">:</span>
+                <span class="c1"># retrieve download link</span>
+                <span class="n">activation_status_result</span> <span class="o">=</span> \
+                    <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">self_link</span><span class="p">,</span>
+                        <span class="n">auth</span><span class="o">=</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="n">PLANET_API_KEY</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="n">download_link</span> <span class="o">=</span> <span class="n">activation_status_result</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span>
+                <span class="c1"># print(download_link)</span>
+                <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">download_link</span><span class="p">,</span> <span class="n">image_ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;download complete&quot;</span><span class="p">)</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+            <span class="c1"># if asset is not yet active</span>
+            <span class="k">if</span> <span class="n">status</span> <span class="o">!=</span> <span class="s1">&#39;active&#39;</span><span class="p">:</span>
+                <span class="k">while</span> <span class="n">cur_activation_status</span> <span class="o">!=</span> <span class="s1">&#39;active&#39;</span><span class="p">:</span>
+                    <span class="c1"># poll every 30 seconds</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+                    <span class="n">activation_status_result</span> <span class="o">=</span> \
+                        <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="n">self_link</span><span class="p">,</span>
+                            <span class="n">auth</span><span class="o">=</span><span class="n">HTTPBasicAuth</span><span class="p">(</span><span class="n">PLANET_API_KEY</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="c1"># update cur_activation_status to current status</span>
+                    <span class="n">cur_activation_status</span> <span class="o">=</span> <span class="n">activation_status_result</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;status&quot;</span><span class="p">]</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;current status &quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">cur_activation_status</span><span class="p">)</span>
+                    <span class="c1"># if asset is activated</span>
+                    <span class="k">if</span> <span class="n">cur_activation_status</span> <span class="o">==</span> <span class="s1">&#39;active&#39;</span><span class="p">:</span>
+                        <span class="c1"># retrieve download link</span>
+                        <span class="n">download_link</span> <span class="o">=</span> <span class="n">activation_status_result</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;location&quot;</span><span class="p">]</span>
+                        <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">download_link</span><span class="p">,</span> <span class="n">image_ids</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;download complete: &quot;</span><span class="p">,</span> <span class="n">download_link</span><span class="p">)</span>
+                        <span class="k">continue</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">image_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39; n/a&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -13193,6 +13352,14 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="jp_data/mosaic_all.png" alt="mosaic_all"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="2.3--IMAGE-QUALITY-ISSUES">2.3  IMAGE QUALITY ISSUES<a class="anchor-link" href="#2.3--IMAGE-QUALITY-ISSUES">&#182;</a></h4><p>Mosaics of the CBR were not used as<br>
 ... they were not complete (for wet season, an important area over known aguadas is absent
 ... they remain cloudy 
@@ -13204,7 +13371,8 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="2.3.1--CLOUD-MASK">2.3.1  <em>CLOUD MASK</em><a class="anchor-link" href="#2.3.1--CLOUD-MASK">&#182;</a></h4><p>A cloud mask was attempted cross a subset image using example-based classification.</p>
+<h4 id="2.3.1--CLOUD-MASK">2.3.1  <em>CLOUD MASK</em><a class="anchor-link" href="#2.3.1--CLOUD-MASK">&#182;</a></h4><p>A cloud mask was attempted cross a subset image using example-based classification. 
+<img src="jp_data/cloud_mask.png" alt="cloud mask"></p>
 
 </div>
 </div>
@@ -13220,15 +13388,21 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="3.-OBJECTIVE">3. OBJECTIVE<a class="anchor-link" href="#3.-OBJECTIVE">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="3.1-CLEAR-MOSAIC">3.1 CLEAR MOSAIC<a class="anchor-link" href="#3.1-CLEAR-MOSAIC">&#182;</a></h4><p>Based on data quality issues, i chose to work with clear imagery where possible ...</p>
 <p>By visually ...</p>
+<table>
+<thead><tr>
+<th style="text-align:center">True Color Composite</th>
+<th style="text-align:center">False Colour Composite</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><img src="jp_data/roi_mosaic.png" alt="clear mosaic"></td>
+<td style="text-align:center"><img src="jp_data/roi_mosaic_nir.png" alt="clear mosaic"></td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -13250,19 +13424,6 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## image here </span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -13271,18 +13432,13 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## image here </span>
-</pre></div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="jp_data/rsz_ndvi_savi.png" alt="ndvi"></p>
 
-    </div>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -13292,19 +13448,6 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## image here </span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -13313,18 +13456,13 @@ sensor information (<a href="https://developers.planet.com/docs/apis/data/sensor
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## image here </span>
-</pre></div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="jp_data/rsz_ndli_ndwi.png" alt="ndvi"></p>
 
-    </div>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
@@ -13383,19 +13521,6 @@ parameters</p>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Pmap of 9k points; for combined </span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -13711,7 +13836,8 @@ parameters</p>
 <h4 id="6.2-FUTURE-DIRECTIONS">6.2 FUTURE DIRECTIONS<a class="anchor-link" href="#6.2-FUTURE-DIRECTIONS">&#182;</a></h4><p>Apply classification model<br>
 ... at scale, with an automated scene order set operation; 
 ... with GEE if the above is not straightforward in ENVI 
-... with differentiation for wet and dry seasons</p>
+... with differentiation for wet and dry seasons<br>
+... is roundness appropriate given pixels are ...</p>
 <p>Collect 2019 imagery and<br>
 ... use Planet's UDM2 cloud mask</p>
 
