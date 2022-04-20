@@ -13486,10 +13486,9 @@ All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https:
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="3.2.1-NORMALISED-DIFFERENCE-VEGETATION-INDEX">3.2.1 <em>NORMALISED DIFFERENCE VEGETATION INDEX</em><a class="anchor-link" href="#3.2.1-NORMALISED-DIFFERENCE-VEGETATION-INDEX">&#182;</a></h4><p>Vegetation indices characterise vegetation structure and function based on reflectance. Non-photosynthetic vegetation, vegetation with dense canopy cover, or vegetation with varied pigments all have specific indices that relate to their ecology.</p>
-<p>Amongst the most popular, and a common starting point, is the Normalised Difference Vegetation Index (NDVI).</p>
-<p>used to characterize vegetation and is a common starting point...<br>
-as expected, the majority of the tropical rainforest is indexed at &gt; 0.5 NDVI ...</p>
+<h4 id="3.2.1-NORMALISED-DIFFERENCE-VEGETATION-INDEX">3.2.1 <em>NORMALISED DIFFERENCE VEGETATION INDEX</em><a class="anchor-link" href="#3.2.1-NORMALISED-DIFFERENCE-VEGETATION-INDEX">&#182;</a></h4><p>Vegetation indices characterise vegetation structure and function based on reflectance. Non-photosynthetic vegetation, vegetation with dense canopy cover, or vegetation with varied pigments all have specific indices that relate to their ecology. Unlike other materials, vegetation is in fact an assortment of materials which interact with solar radiation. As such, water-levels in leaves, the pigment of leaves, nutrients or other organic compouns, as well as the assemblage of plants may influence reflectance. Here I use vegation indices to map the <em>relative</em> amounts of common vegetation materials, rather than determine where specific vegetation features are.</p>
+<p><img src="jp_data/NDVI_formula.png" alt="NDVI.png"></p>
+<p>A common starting point for characterizing vegetation is the Normalised Difference Vegetation Index (NDVI). Since my goal is to garner a baseline understanding of vegetation in the CBR, NDVI is a helpful index, mapping relative amounts of vegetation materials. As the CBR is a rainforest with dense canopy cover, the majority of the scene outputs an NDVI value of greater-than 0.5. In areas where there is no or limited canopy cover, soils influence how light interacts with neighbouing plant materials.</p>
 
 </div>
 </div>
@@ -13505,7 +13504,9 @@ as expected, the majority of the tropical rainforest is indexed at &gt; 0.5 NDVI
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">3.2.2 <em>SOIL ADJUSTED VEGETATION INDEX</em><a class="anchor-link" href="#3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">&#182;</a></h4><p>SAVI / OSAVI ... WAS USED TO MASK images ...</p>
+<h4 id="3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">3.2.2 <em>SOIL ADJUSTED VEGETATION INDEX</em><a class="anchor-link" href="#3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">&#182;</a></h4><p>SAVI / OSAVI ...</p>
+<p><img src="jp_data/SAVI_formula.png" alt="SAVI.png"></p>
+<p>WAS USED TO MASK images ...</p>
 <p>this mask is rationalised as ... 
 wherever soil is visible, a limited canopy exists... and as such, water at ground level and its associated spectra could be captured ...<br>
 computationally intensive tasks such as the rule-based feature extraction benefit from data reduction...</p>
@@ -13518,6 +13519,7 @@ computationally intensive tasks such as the rule-based feature extraction benefi
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="3.2.3-NORMALISED-DIFFERENCE-WATER-INDEX">3.2.3 <em>NORMALISED DIFFERENCE WATER INDEX</em><a class="anchor-link" href="#3.2.3-NORMALISED-DIFFERENCE-WATER-INDEX">&#182;</a></h4><p>NDWI ...</p>
+<p><img src="jp_data/NDWI_formula.png" alt="NDWI"></p>
 
 </div>
 </div>
@@ -13551,8 +13553,7 @@ computationally intensive tasks such as the rule-based feature extraction benefi
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="4.-RESULTS">4. RESULTS<a class="anchor-link" href="#4.-RESULTS">&#182;</a></h3><hr>
-
+<h3 id="4.-RESULTS">4. RESULTS<a class="anchor-link" href="#4.-RESULTS">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13877,8 +13878,7 @@ parameters</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="5.-DISCUSSION">5. DISCUSSION<a class="anchor-link" href="#5.-DISCUSSION">&#182;</a></h3><hr>
-
+<h3 id="5.-DISCUSSION">5. DISCUSSION<a class="anchor-link" href="#5.-DISCUSSION">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13908,8 +13908,7 @@ parameters</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="6.-CONCLUSION">6. CONCLUSION<a class="anchor-link" href="#6.-CONCLUSION">&#182;</a></h3><hr>
-
+<h3 id="6.-CONCLUSION">6. CONCLUSION<a class="anchor-link" href="#6.-CONCLUSION">&#182;</a></h3>
 </div>
 </div>
 </div>
@@ -13924,8 +13923,7 @@ parameters</p>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="7.-REFERENCES">7. REFERENCES<a class="anchor-link" href="#7.-REFERENCES">&#182;</a></h3><hr>
-
+<h3 id="7.-REFERENCES">7. REFERENCES<a class="anchor-link" href="#7.-REFERENCES">&#182;</a></h3>
 </div>
 </div>
 </div>
