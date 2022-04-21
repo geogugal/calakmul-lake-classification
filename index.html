@@ -13112,7 +13112,7 @@ div#notebook {
  3.2.2 <a href="#3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">SOIL ADJUSTED VEGETATION INDEX</a><br>
  3.2.3 <a href="#3.2.3-NORMALISED-DIFFERENCE-WATER-INDEX">NORMALISED DIFFERENCE WATER INDEX</a><br>
  3.2.4 <a href="#3.2.4-NORMALISED-DIFFERENCE-LAKE-INDEX">NORMALISED DIFFERENCE LAKE INDEX</a><br>
- 3.3 <a href="#3.3-FEATURE-CLASSIFICATION">FEATURE CLASSIFICATION</a>      </li>
+ 3.3 <a href="#3.3-FEATURE-EXTRACTION">FEATURE EXTRACTION</a>      </li>
 <li><a href="#4.-RESULTS">RESULTS</a><br>
  4.1 <a href="#4.1-RULE-BASED-CLASSIFICATION">RULE-BASED CLASSIFICATION</a><br>
  4.2 <a href="#4.2-SPATIAL-LOGIC-FOR-WATERBODIES">SPATIAL LOGIC FOR WATERBODIES</a>  </li>
@@ -13214,9 +13214,11 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong><em>NOTE:</em></strong></p>
-<p>Images will be downloaded to: PATH + 'scene_folder_name'<br>
-An API key is required to access data<br>
-All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https://developers.planet.com/docs/data/psscene4band/">PSScene4Band documentation</a></p>
+<ul>
+<li>Images will be downloaded to: PATH + 'scene_folder_name'  </li>
+<li>An API key is required to access data  </li>
+<li>All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https://developers.planet.com/docs/data/psscene4band/">PSScene4Band documentation</a></li>
+</ul>
 
 </div>
 </div>
@@ -13412,8 +13414,8 @@ All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https:
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="2.3--IMAGE-QUALITY-ISSUES">2.3  IMAGE QUALITY ISSUES<a class="anchor-link" href="#2.3--IMAGE-QUALITY-ISSUES">&#182;</a></h4><p>While both tools yielded similar results, there are notable similarities and differences. All of the above mosaics, for both dry and wet seasons, remain occluded by clouds. This is expected, especially in the wet season, when precipitation is highest and cloud cover remains over the region. As well, both seasons - as defined by three-month periods - do not have full cover by the PlanetScope sensor. The dry season has missing sections in the South-East most part of the CBR. Worse, the wet season has missing images over the region where our tweleve known aguadas and their water availability are monitored.</p>
-<p>While missing components cannot be addressed without either expanding the time range of each season, or by combining with alternative remote-sensing products, there are three relevent methods for correcting cloudy images. That is, to create cloud masks. First, existing cloud-correction products could be imported from Planet directly. Planet's 'useable data masks' (UDM2) are not available for 2017, only dating back to August 2018 for PlanetScope 4-band imagery. Second, the 'scene-order' can be set when compositing images. Considering the amount of images available for each season, this proved to be an overwhelming task to do manually. Automating this procedure also proved difficult as limited metadata is imported with imagery, despite Planet possessing critical information, like percent-cloud-cover, for each image. If such information were to be availed - linked as metadata for each image - a script could be written to set the scene order by this attribute. Relatedly, PY-ENVI, the integration between ENVI and Python remains poorly documented. Third, cloud masks could be created within ENVI by detecting, then subsequently masking, clouds across images. This procedure is described below.</p>
-<p>Overall, image quality concerns are problematic for downstream analysis, and requires the project be re-scaled: reducing the spatial extent we are working with, and re-envisioning our aim. That is, it is unlikely for this exploratory study to adequately consider the entire Calakmul Biosphere Reserve as of yet. Further steps to potentiate such analysis are mentioned below in discussion.</p>
+<p>While missing components cannot be addressed without either expanding the time range of each season, or by combining with alternative remote-sensing products, there are three relevent methods for correcting cloudy images. That is, to create cloud masks. First, existing cloud-correction products could be imported from Planet directly. Planet's 'useable data masks' (UDM2) are not available for 2017, only dating back to August 2018 for PlanetScope 4-band imagery. Second, the 'scene-order' can be set when compositing images. Considering the amount of images available for each season, this proved to be an overwhelming task to do manually. Automating this procedure also proved difficult as limited metadata is imported with imagery (when using the API). If such information were to be availed - linked as metadata for each image - a script could be written to set the scene order by this attribute. Relatedly, PY-ENVI, the integration between ENVI and Python remains poorly documented. Third, cloud masks could be created within ENVI by detecting, then subsequently masking, clouds across images. This procedure is described below.</p>
+<p>Overall, image quality concerns are problematic for downstream analysis, and require the project be re-scaled. Reducing the spatial extent we are working with, and re-envisioning our aim is necessary. That is, it is unlikely for this exploratory study to adequately consider the entire Calakmul Biosphere Reserve as of yet. Further steps to potentiate such analysis are mentioned below in discussion.</p>
 <p>For more information of UDM2 for PlanetScope, please see: <a href="https://developers.planet.com/docs/data/udm-2/">planet/planetscope/udm-2/</a></p>
 
 </div>
@@ -13422,7 +13424,7 @@ All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https:
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="2.3.1-CLOUD-MASK">2.3.1 <em>CLOUD MASK</em><a class="anchor-link" href="#2.3.1-CLOUD-MASK">&#182;</a></h4><p>Methods for creating a cloud mask were attempted across a subset image - SCENE ID: 20170922_170743_0f2d. This image has substaintial cloud cover, cloud shadow, some haze effects, and overlays where aguadas are monitored. Unfortunately, aguadas are occluded by cloud cover and cloud shadow here. Nonetheless, I use this image to begin creating a cloud mask.</p>
+<h4 id="2.3.1-CLOUD-MASK">2.3.1 <em>CLOUD MASK</em><a class="anchor-link" href="#2.3.1-CLOUD-MASK">&#182;</a></h4><p>Methods for creating a cloud mask were attempted across a subset image - SCENE ID: 20170922_170743_0f2d. This image has substaintial cloud cover, cloud shadow, some haze effects, and overlaps with where aguadas are monitored. Unfortunately, aguadas are occluded by cloud cover and cloud shadow here. Nonetheless, I use this image to begin creating a cloud mask.</p>
 <p><img src="jp_data/rsz__outcloud_mosaic.png" alt="cloud mask"></p>
 
 </div>
@@ -13431,9 +13433,10 @@ All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https:
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>An example-based classification, relying on a manual selection of cloud and show features, resulted in the below image. Here red denotes 'cloud' while blue denotes 'cloud-shadow'. While the resulting image seems promising, it betrays in two ways: 1) clouds close to one-another 'bleed' into neighbours resulting in an overclassification of cloud; and 2) many major cloud shadows are not detected. For example, a major cloud shadow in the south east portion if the image remains undetected. It may be the case that this cloud and its shadow went undetected due to their being considerable 'haze' in the area. Spectra of haze and cloud differ and would prove difficult without further training. Notably, this example-based classification was not validated beyond visual inspection.</p>
-<p>Overall, the example based classification may prove to be a worthwhile route for cloud-masking prior to analysis, but would also require more time with training data, validation across different parts of the scene and across both the wet and dry seasons. A (spectral) rule-based classification methodology was also attempted, but yielded considerable noise.</p>
+<p>An example-based classification, relying on a manual selection of cloud and shadow features to train the model, resulted in a moderately helpful cloud mask. Here red denotes 'cloud' while blue denotes 'cloud-shadow'.</p>
 <p><img src="jp_data/rsz_ex_based.png" alt="example_based"></p>
+<p>While the resulting image seems promising, it betrays in two ways: 1) clouds close to one-another 'bleed' into neighbouring pixels, resulting in an overclassification of cloud; and 2) many major cloud shadows are not detected. For example, a major cloud shadow in the south east portion of the image remains undetected. It may be the case that this cloud and its shadow went undetected due to their being considerable 'haze' in the area OR as not enough training data was provided. Spectra of haze and cloud differ and would prove difficult to map without further training. Notably, this example-based classification was not validated beyond visual inspection.</p>
+<p>Overall, the example based classification may prove to be a worthwhile route for cloud-masking prior to analysis, but would also require more time with training data, validation across different parts of the scene and across both the wet and dry seasons. A (spectral) rule-based classification methodology was also attempted, but yielded considerable noise.</p>
 
 </div>
 </div>
@@ -13470,8 +13473,8 @@ All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https:
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="3.2-INDICES">3.2 INDICES<a class="anchor-link" href="#3.2-INDICES">&#182;</a></h4><p>Indices capture spectral variation in an image by relating surface reflectance collected across bands. For each index, relevant bands differ depending on what aspects of the environment the index is meant to highlight. Indices have been created for vegetation, burned areas, urbanised regions, waterbodies, as well as geologic features. By comparing indices collected over a scene over time, some estimation of environmental change can be made. While this is not the focus of this exploratory study, it is a popular use-case of various spectral indices. Once an analytical workflow is established for detecting waterbodies, we can run and re-run the analysis with changing temporality to characterize change in where and when intermittent waterbodies become available.</p>
-<p>To use indices, either using <em>Band Math</em> or ENVI's built-in <em>Spectral Indices</em> toolbox, images must include wavelength, wavelength units, and full-width-half-mazimum metadata. This metadata is adapted within ENVI 5.6 by clicking on 'view Metadata', then 'add Information'. These parameters are based on the sensor with which reflectance was measured (i.e., PS2, and PS2.SD).</p>
+<h4 id="3.2-INDICES">3.2 INDICES<a class="anchor-link" href="#3.2-INDICES">&#182;</a></h4><p>Indices capture spectral variation in an image by relating surface reflectance collected across bands. For each index, relevant bands differ depending on what aspects of the environment the index is meant to highlight. Indices have been created for vegetation, burned areas, urbanised regions, waterbodies, as well as geologic features. By comparing indices collected across a scene over time, some estimation of environmental change can be made. While this is not the focus of this exploratory study, it is a popular use-case of various spectral indices. Once an analytical workflow is established for detecting waterbodies, we can run and re-run the analysis with changing temporality to characterize change in where and when intermittent waterbodies become available.</p>
+<p>To use indices, either using <em>Band Math</em> or ENVI's built-in <em>Spectral Indices</em> toolbox, images must include wavelength, wavelength units, and full-width-half-maximum metadata. This metadata can be adapted within ENVI 5.6 by clicking on 'view Metadata', then 'add Information'. These parameters are based on the sensor with which reflectance was measured (i.e., PS2, and PS2.SD).</p>
 <p>For PlanetScope scenes, metadata is as follows ('wavelength' (fwhm) 'units'):</p>
 <ul>
 <li>BLUE - band 1: 490 (20) nm</li>
@@ -13487,8 +13490,9 @@ All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https:
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h4 id="3.2.1-NORMALISED-DIFFERENCE-VEGETATION-INDEX">3.2.1 <em>NORMALISED DIFFERENCE VEGETATION INDEX</em><a class="anchor-link" href="#3.2.1-NORMALISED-DIFFERENCE-VEGETATION-INDEX">&#182;</a></h4><p>Vegetation indices characterise vegetation structure and function based on reflectance. Non-photosynthetic vegetation, vegetation with dense canopy cover, or vegetation with varied pigments all have specific indices that relate to their ecology. Unlike other materials, vegetation is in fact an assortment of materials which interact with solar radiation. As such, water-levels in leaves, the pigment of leaves, nutrients or other organic compouns, as well as the assemblage of plants may influence reflectance. Here I use vegation indices to map the <em>relative</em> amounts of common vegetation materials, rather than determine where specific vegetation features are.</p>
-<p><img src="jp_data/NDVI_formula.png" alt="NDVI.png"></p>
-<p>A common starting point for characterizing vegetation is the Normalised Difference Vegetation Index (NDVI). Since my goal is to garner a baseline understanding of vegetation in the CBR, NDVI is a helpful index, mapping relative amounts of vegetation materials. As the CBR is a rainforest with dense canopy cover, the majority of the scene outputs an NDVI value of greater-than 0.5. In areas where there is no or limited canopy cover, soils influence how light interacts with neighbouing plant materials.</p>
+<p>The Normalised Difference Vegetation Index (NDVI) is a common starting point for characterizing vegetation. Since my goal is to garner a baseline understanding of vegetation in the CBR, NDVI is a helpful index - mapping relative amounts of vegetation materials. The above formula, uses difference between NIR and Red bands -- bands 4 and 3 in PlanetScope 4-band multispectral data -- to highlight relative vegetation in the scene. The availability of NIR regions is key to the underlying rationale of distinguishing vegetation: live green plant species absorb solar radiation in the photosynthetically-active regions (PAR), while re-emitting radiation in NIR spectral regions.</p>
+<p><img src="jp_data/NDVI_formula.PNG" alt="NDVI.png"></p>
+<p>As the CBR is a rainforest with dense canopy cover, the majority of the scene outputs an NDVI value of greater-than 0.5 (which can be understood as <em>relatively</em> high differences between the NIR and Red bands). In areas where there is no or limited canopy cover, soils influence how light interacts with neighbouing plant materials. Or, as I understand, how light emitted by features infuence one-another. Here, canopy obstructs spectra of interest from waterbodies.</p>
 
 </div>
 </div>
@@ -13504,13 +13508,9 @@ All 'PlanetScope' sensors are designated as 'PSScene' in current <a href="https:
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">3.2.2 <em>SOIL ADJUSTED VEGETATION INDEX</em><a class="anchor-link" href="#3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">&#182;</a></h4><p>SAVI / OSAVI ...</p>
-<p><img src="jp_data/SAVI_formula.png" alt="SAVI.png"></p>
-<p>WAS USED TO MASK images ...</p>
-<p>this mask is rationalised as ... 
-wherever soil is visible, a limited canopy exists... and as such, water at ground level and its associated spectra could be captured ...<br>
-computationally intensive tasks such as the rule-based feature extraction benefit from data reduction...</p>
-<p>extremely high soil exposure can be neglected as ...</p>
+<h4 id="3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">3.2.2 <em>SOIL ADJUSTED VEGETATION INDEX</em><a class="anchor-link" href="#3.2.2-SOIL-ADJUSTED-VEGETATION-INDEX">&#182;</a></h4><p>The Soil Adjusted Vegetation Index, like NDVI, premise upon difference between Near Infra-Red and Red regions. It is unique in its adaption for minimizing the influence of soil brightness on vegetation, and introduces <em>L</em> as a transformation factor (Huete, 1988). I used the default <em>l</em> of 0.5 to find areas which scored <strong><em>high</em></strong> relative to the scene. SAVI is based on an understanding of a 'red-line' in Red and NIR wavelength space, and a necessary transformation to detect vegetation likely affected by soil brightness -- that is areas without a dense canopy cover.</p>
+<p><img src="jp_data/SAVI_formula.PNG" alt="SAVI.png"></p>
+<p>While it is adapted for use as an index for vegetation with interaction effects with soil, I use it to create a background mask. I rationalise this wherever soil is visible, a limited canopy exist, and as such, water at ground level and its associated spectra could be captured with other indexes. I also rationalise a background mask as computationally intensive tasks such as the rule-based feature extraction benefit from data reduction - in this capacity, where pixels will not need to be classified.</p>
 
 </div>
 </div>
@@ -13518,7 +13518,7 @@ computationally intensive tasks such as the rule-based feature extraction benefi
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="3.2.3-NORMALISED-DIFFERENCE-WATER-INDEX">3.2.3 <em>NORMALISED DIFFERENCE WATER INDEX</em><a class="anchor-link" href="#3.2.3-NORMALISED-DIFFERENCE-WATER-INDEX">&#182;</a></h4><p>NDWI ...</p>
+<h4 id="3.2.3-NORMALISED-DIFFERENCE-WATER-INDEX">3.2.3 <em>NORMALISED DIFFERENCE WATER INDEX</em><a class="anchor-link" href="#3.2.3-NORMALISED-DIFFERENCE-WATER-INDEX">&#182;</a></h4><p>The Normalised Difference Water Index</p>
 <p><img src="jp_data/NDWI_formula.png" alt="NDWI"></p>
 
 </div>
@@ -13535,7 +13535,8 @@ computationally intensive tasks such as the rule-based feature extraction benefi
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="3.2.4-NORMALISED-DIFFERENCE-LAKE-INDEX">3.2.4 <em>NORMALISED DIFFERENCE LAKE INDEX</em><a class="anchor-link" href="#3.2.4-NORMALISED-DIFFERENCE-LAKE-INDEX">&#182;</a></h4><p>NDLI ...</p>
+<h4 id="3.2.4-NORMALISED-DIFFERENCE-LAKE-INDEX">3.2.4 <em>NORMALISED DIFFERENCE LAKE INDEX</em><a class="anchor-link" href="#3.2.4-NORMALISED-DIFFERENCE-LAKE-INDEX">&#182;</a></h4><p>The Normalised Difference Lake Index relies on NIR regions, and high absorption of NIR in water to distinguish water features (Watson et al., 2018). While the NDLI is not intended for forest regions, I use it to find area where waterbodies interact with soil or rock particles. During the classification process I use this index to denote a liberal understanding of areas of water -- that is, to include areas where water and rock features are interacting.</p>
+<p><img src="jp_data/NDLI_formula.png" alt="NDLI"></p>
 
 </div>
 </div>
