@@ -6,4 +6,5 @@
  <sup>A</sup> *Department of Geography, McGill University, Montreal, Quebec*  
  <sup>B</sup> *Departamento de Conservación de la Biodiversidad, El Colegio de la Frontera Sur, Campeche, Mexico*
 
+Report: https://geogugal.github.io/calakmul-lake-classification/
 ---
